@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Цитаты";
+}
+<h2>@ViewBag.Title.</h2>
+@using (Ajax.BeginForm("ParseQuote", new AjaxOptions
+{
+    UpdateTargetId = "results",
+    LoadingElementId = "loading",
+   LoadingElementDuration = 1200
+}))
+{
+    <select name="character">
+        <option value="tyrion">Tyrion (10 quotes)</option>
+        <option value="bronn">Bronn (1 quote)</option>
+        <option value="brynden">Brynden Tully (1 quote)</option>
+        <option value="cersei">Cersei (4 quotes)</option>
+        <option value="hound">The Hound (1 quote)</option>
+        <option value="jaime">Jaime Lannister (2 quote)</option>
+        <option value="littlefinger">Littlefinger (1 quote)</option>
+        <option value="olenna">Olenna Tyrell (3 quotes)</option>
+        <option value="renly">Renly Baratheon (1 quote)</option>
+        <option value="varys">Varys (2 quotes)</option>
+    </select>
+    <input type="submit" value="Parse" />
+    <div id="loading" style="display:none; color:Red; font-weight:bold;">
+        <p>Loading...</p>
+    </div>
+    
+}
+<div id="results">
+    <p for="comment">Quote @Html.ViewBag.Character:</p><br>
+    <textarea class="form-control" rows="5" id="comment" width="600px" cols="600">@Html.ViewBag.Quote</textarea>
+
+    <p for="comment">Yodafication:</p><br>
+    <textarea class="form-control" rows="5" id="comment" width="600px" cols="600">@Html.ViewBag.Message</textarea>
+</div>
+
+
+
+
+
