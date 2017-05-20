@@ -167,7 +167,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Classes\QuoteObject.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Classes\NumberObject.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -230,15 +232,6 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web - Копировать.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web - Копировать.Debug.config">
-      <DependentUpon>Web - Копировать.config</DependentUpon>
-    </Content>
-    <Content Include="Web - Копировать.Release.config">
-      <DependentUpon>Web - Копировать.config</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

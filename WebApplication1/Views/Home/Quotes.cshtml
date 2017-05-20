@@ -2,7 +2,7 @@
     ViewBag.Title = "Цитаты";
 }
 <h2>@ViewBag.Title.</h2>
-@using (Ajax.BeginForm("ParseQuote", new AjaxOptions
+@using (Ajax.BeginForm("RequestAPI", new AjaxOptions
 {
     UpdateTargetId = "results",
     LoadingElementId = "loading",
@@ -22,17 +22,13 @@
         <option value="varys">Varys (2 quotes)</option>
     </select>
     <input type="submit" value="Parse" />
-    <div id="loading" style="display:none; color:Red; font-weight:bold;">
-        <p>Loading...</p>
+    <div id="loading" style="display:none; color:green; font-weight:bold;">
+        <p>Загрузка</p>
     </div>
     
 }
 <div id="results">
-    <p for="comment">Quote @Html.ViewBag.Character:</p><br>
-    <textarea class="form-control" rows="5" id="comment" width="600px" cols="600">@Html.ViewBag.Quote</textarea>
-
-    <p for="comment">Yodafication:</p><br>
-    <textarea class="form-control" rows="5" id="comment" width="600px" cols="600">@Html.ViewBag.Message</textarea>
+ 
 </div>
 
 
