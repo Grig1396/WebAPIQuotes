@@ -1,8 +1,24 @@
 ﻿<div id="result">
-    <label for="comment">Цитата из игры престолов @ViewBag.Character:</label><br>
+    <label for="comment">Цитата из Game of Thrones персонажа @ViewBag.Character:</label><br>
     <textarea class="form-control" rows="5" id="comment" width="300px" cols="300">@ViewBag.Quote</textarea>
 
-    <label for="comment">По Йоде </label><br>
+    <label for="comment">Как бы это произнес персонаж Star Wars Yoda </label><br>
     <textarea class="form-control" rows="5" id="comment" width="300px" cols="300">@ViewBag.Message</textarea><br>
-    <textarea class="form-control" rows="5" id="comment" width="300px" cols="300">@ViewBag.number @ViewBag.text</textarea>
+    <label for="comment">@ViewBag.number</label><br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Numbers</th>
+                        <th>Type</th>
+                        <th>Facts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @MyHelpers.HtmlDictionaryList(ViewBag.result, ViewBag.list)
+                    </tr>
+                </tbody>
+</table>
+
+
 </div>

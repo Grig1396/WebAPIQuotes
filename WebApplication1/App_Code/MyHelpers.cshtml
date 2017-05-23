@@ -1,0 +1,22 @@
+﻿@helper HtmlDictionaryList(Dictionary<int,string> items, List<string> list)
+{
+int i = 0;
+
+foreach (var item in items)
+{
+
+        <tr>
+            <td>
+                @item.Key
+            </td>
+            <td>
+                @list[i]
+            </td>
+            <td>
+                @item.Value
+            </td>
+        </tr>
+    i++;
+
+}
+}

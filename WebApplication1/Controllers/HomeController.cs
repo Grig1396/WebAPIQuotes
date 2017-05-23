@@ -2,7 +2,10 @@
 using System.Web.Mvc;
 using unirest_net.http;
 using Newtonsoft.Json;
-
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class HomeController : Controller
     {
@@ -11,9 +14,9 @@ public class HomeController : Controller
             return View();
         }
 
+    char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
 
-
-        public ActionResult Quotes()
+    public ActionResult Quotes()
         {
 
             return View();
@@ -23,11 +26,29 @@ public class HomeController : Controller
         public ActionResult RequestAPI(string character)
         {
             ParseQuote(character);
-           var jsonResponse = Yodafication(ViewBag.Quote);
-            ViewBag.Message = jsonResponse.Body.ToString();
-            string js = jsonResponse.Body.ToString();
-            NumbersFact(js.Length, js.Length);
-            return PartialView("_result");
+            string jsonResponse = Yodafication(ViewBag.Quote);
+            var Numbers = NumbersFact(RandomType(), jsonResponse.Length);
+        // var Numbers = NumbersFact(RandomType(),js.Length);
+        Dictionary<int, string> result = new Dictionary<int, string>();
+        List<string> typeList = new List<string>();
+        int i = 0;
+        for (int k = 0; k < jsonResponse.Length-1; k++)
+        {
+            if (vowels.Contains(jsonResponse[k]))
+            {
+                i++;
+                typeList.Add(RandomType());
+                result.Add(i * Numbers.number, NumbersFact(typeList[i - 1], (i * Numbers.number)).text);
+            }
+        }
+        ViewBag.Message = jsonResponse;
+        ViewBag.text = Numbers.text;
+        ViewBag.type = Numbers.type;
+        ViewBag.number = Numbers.number;
+        ViewBag.list = typeList;
+        ViewBag.result = result;
+
+        return PartialView("_result");
         }
     public void ParseQuote(string character) 
     {
@@ -39,25 +60,47 @@ public class HomeController : Controller
         
     }
 
-        public HttpResponse<string> Yodafication(string quote)
+        public string Yodafication(string quote)
         {
+        // HttpResponse<string> jsonResponse = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + quote)
         HttpResponse<string> jsonResponse = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + quote)
-            .header("X-Mashape-Authorization", "ejWTgwZXAlmshfC6wOWKifd9Am2Lp1OrhYkjsnfOF0oNRh1L9f")
+             .header("X-Mashape-Authorization", "ejWTgwZXAlmshfC6wOWKifd9Am2Lp1OrhYkjsnfOF0oNRh1L9f")
             .asJson<string>();
-        return jsonResponse;
+        return Regex.Replace(jsonResponse.Body, "[ ]+", " ");
 
         }
-    public void NumbersFact(int min, int max)
+    public dynamic NumbersFact(string type, int number)
     {
         HttpResponse<string> response = Unirest
-            .get("https://numbersapi.p.mashape.com/random/" + "trivia" + "?fragment=true&json=true&max=" + max +
-                 "&min=" + min)
+            .get("https://numbersapi.p.mashape.com/"+ number + "/" + type + "?fragment=true&json=true")
             .header("X-Mashape-Key", "GILTcZVs1dmsh5CIFViX3zp0NDdEp1hnk2djsnVMUYlTZ4uVdn")
             .header("Accept", "text/plain")
             .asString();
         var Numbers = JsonConvert.DeserializeObject<NumberObject>(response.Body);
-        ViewBag.text = Numbers.text;
-        ViewBag.type = Numbers.type;
-        ViewBag.number = Numbers.number;
+        return Numbers;
+    }
+    public string RandomType()
+    {
+        Random rnd = new Random();
+        switch (rnd.Next(0, 3))
+        {
+            case 0:
+                {
+                    return "trivia";
+                }
+            case 1:
+                {
+                    return "math";
+                }
+            case 2:
+                {
+                    return "date";
+                }
+            default:
+                {
+                    return "year";
+                }
+        }
+
     }
 }
