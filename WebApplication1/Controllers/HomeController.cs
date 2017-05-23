@@ -25,78 +25,77 @@ public class HomeController : Controller
         [HttpPost]
         public ActionResult RequestAPI(string character)
         {
-            ParseQuote(character);
+            var JsonQuote = ParseQuote(character);
+            ViewBag.Quote = JsonQuote.Quote;
+            ViewBag.Character = JsonQuote.Character;
             string jsonResponse = Yodafication(ViewBag.Quote);
             var Numbers = NumbersFact(RandomType(), jsonResponse.Length);
-        // var Numbers = NumbersFact(RandomType(),js.Length);
-        Dictionary<int, string> result = new Dictionary<int, string>();
-        List<string> typeList = new List<string>();
-        int i = 0;
-        for (int k = 0; k < jsonResponse.Length-1; k++)
-        {
-            if (vowels.Contains(jsonResponse[k]))
+            Dictionary<int, string> result = new Dictionary<int, string>();
+            List<string> typeList = new List<string>();
+            int i = 0;
+            for (int k = 0; k < jsonResponse.Length-1; k++)
             {
-                i++;
-                typeList.Add(RandomType());
-                result.Add(i * Numbers.number, NumbersFact(typeList[i - 1], (i * Numbers.number)).text);
+                if (vowels.Contains(jsonResponse[k]))
+                {
+                    i++;
+                    typeList.Add(RandomType());
+                    result.Add(i * Numbers.number, NumbersFact(typeList[i - 1], (i * Numbers.number)).text);
+                }
             }
+            ViewBag.Message = jsonResponse;
+            ViewBag.text = Numbers.text;
+            ViewBag.type = Numbers.type;
+            ViewBag.number = Numbers.number;
+            ViewBag.list = typeList;
+            ViewBag.result = result;
+            return PartialView("_result");
         }
-        ViewBag.Message = jsonResponse;
-        ViewBag.text = Numbers.text;
-        ViewBag.type = Numbers.type;
-        ViewBag.number = Numbers.number;
-        ViewBag.list = typeList;
-        ViewBag.result = result;
-
-        return PartialView("_result");
-        }
-    public void ParseQuote(string character) 
-    {
-        HttpResponse<string> response = Unirest.get("https://got-quotes.herokuapp.com/quotes?char="+character)
-        .asJson<string>();
-        var JsonQuote = JsonConvert.DeserializeObject<QuoteObject>(response.Body);
-        ViewBag.Quote = JsonQuote.Quote;
-        ViewBag.Character = JsonQuote.Character;
+        public dynamic ParseQuote(string character) 
+        {
+            HttpResponse<string> response = Unirest.get("https://got-quotes.herokuapp.com/quotes?char="+character)
+            .asJson<string>();
+            return JsonConvert.DeserializeObject<QuoteObject>(response.Body);
         
-    }
+        
+        }
 
         public string Yodafication(string quote)
         {
         // HttpResponse<string> jsonResponse = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + quote)
-        HttpResponse<string> jsonResponse = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + quote)
-             .header("X-Mashape-Authorization", "ejWTgwZXAlmshfC6wOWKifd9Am2Lp1OrhYkjsnfOF0oNRh1L9f")
+            HttpResponse<string> jsonResponse = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + quote)
+            .header("X-Mashape-Authorization", "ejWTgwZXAlmshfC6wOWKifd9Am2Lp1OrhYkjsnfOF0oNRh1L9f")
             .asJson<string>();
-        return Regex.Replace(jsonResponse.Body, "[ ]+", " ");
-
+            return Regex.Replace(jsonResponse.Body, "[ ]+", " ");
         }
-    public dynamic NumbersFact(string type, int number)
-    {
-        HttpResponse<string> response = Unirest
+
+        public dynamic NumbersFact(string type, int number)
+        {
+            HttpResponse<string> response = Unirest
             .get("https://numbersapi.p.mashape.com/"+ number + "/" + type + "?fragment=true&json=true")
             .header("X-Mashape-Key", "GILTcZVs1dmsh5CIFViX3zp0NDdEp1hnk2djsnVMUYlTZ4uVdn")
             .header("Accept", "text/plain")
             .asString();
-        var Numbers = JsonConvert.DeserializeObject<NumberObject>(response.Body);
-        return Numbers;
-    }
-    public string RandomType()
-    {
-        Random rnd = new Random();
-        switch (rnd.Next(0, 3))
+            var Numbers = JsonConvert.DeserializeObject<NumberObject>(response.Body);
+            return Numbers;
+        }
+        public string RandomType()
         {
-            case 0:
+            Random rnd = new Random();
+            switch (rnd.Next(0, 3))
+            {
+                case 0:
                 {
-                    return "trivia";
+                        return "trivia";
                 }
-            case 1:
+                case 1:
                 {
-                    return "math";
+                        return "math";
                 }
-            case 2:
+                case 2:
                 {
                     return "date";
                 }
-            default:
+                default:
                 {
                     return "year";
                 }

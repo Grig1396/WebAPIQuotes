@@ -2,12 +2,17 @@
     ViewBag.Title = "Цитаты";
 }
 <h2>@ViewBag.Title.</h2>
+Это приложение было написано в учебных целях, для закрепления знаний основ Web-разработки. Мы использовали три сторонних Web API:
+<ui>
+    <li><a href="https://got-quotes.herokuapp.com/">Game of Thrones Quotes</a></li> 
+    <li><a href="https://market.mashape.com/ismaelc/yoda-speak">Yoda speak</a></li>
+    <li><a href="https://market.mashape.com/divad12/numbers-1">Numbers</a></li> 
+</ui>
+Общий алгоритм работы таков: запрашивается цитата, отправляет её Yoda speak, получает итоговую строку. Далее идёт просчёт всех символов в полученной строке. Дальше каждой букве присваиваем ID и умножаем его на количество всех символов. Получаем выборку чисел и запрашиваем у сервера факты по этим числам.
 @using (Ajax.BeginForm("RequestAPI", new AjaxOptions
-{
-    UpdateTargetId = "results",
-    LoadingElementId = "loading",
-   LoadingElementDuration = 1200
-}))
+    {
+        UpdateTargetId = "results",
+        LoadingElementId = "loading"}))
 {
     <select name="character">
         <option value="tyrion">Tyrion (10 quotes)</option>
@@ -23,7 +28,7 @@
     </select>
     <input type="submit" value="Parse" />
     <div id="loading" style="display:none; color:green; font-weight:bold;">
-        <p>Загрузка</p>
+        <p>Загрузка...</p>
     </div>
     
 }
