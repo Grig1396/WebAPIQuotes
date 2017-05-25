@@ -10,9 +10,10 @@
 </ui>
 Общий алгоритм работы таков: запрашивается цитата, отправляет её Yoda speak, получает итоговую строку. Далее идёт просчёт всех символов в полученной строке. Дальше каждой букве присваиваем ID и умножаем его на количество всех символов. Получаем выборку чисел и запрашиваем у сервера факты по этим числам.
 @using (Ajax.BeginForm("RequestAPI", new AjaxOptions
-    {
-        UpdateTargetId = "results",
-        LoadingElementId = "loading"}))
+{
+    UpdateTargetId = "results",
+    OnFailure = "OnFailure",
+    LoadingElementId = "loading"}))
 {
     <select name="character">
         <option value="tyrion">Tyrion (10 quotes)</option>
@@ -26,15 +27,35 @@
         <option value="renly">Renly Baratheon (1 quote)</option>
         <option value="varys">Varys (2 quotes)</option>
     </select>
-    <input type="submit" value="Parse" />
-    <div id="loading" style="display:none; color:green; font-weight:bold;">
-        <p>Загрузка...</p>
-    </div>
-    
+    <input type="submit" value="Parse" /><br>
+        <img id="loading" src="@Url.Content("~/Content/Images/spinner.gif")" style="display:none" height="24" width="24"/>
+   
+
 }
 <div id="results">
  
 </div>
+<script type="text/javascript">
+
+    function OnFailure(request, error) {
+        $("#results").html("Произошла ошибка. Попробуйте повтороить запрос.");
+    }
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name, filename) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+
+            document.getElementById("dlink").href = uri + base64(format(template, ctx));
+            document.getElementById("dlink").download = filename + Math.floor((Math.random() * 9999999) + 1000000) + '.xls';
+            document.getElementById("dlink").click();
+
+        }
+    })()
+</script>
 
 
 

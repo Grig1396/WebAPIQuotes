@@ -5,7 +5,7 @@
     <label for="comment">Как бы это произнес персонаж Star Wars Yoda </label><br>
     <textarea class="form-control" rows="5" id="comment" width="300px" cols="300">@ViewBag.Message</textarea><br>
     <label for="comment">@ViewBag.number символов в тексте.</label><br>
-            <table class="table table-striped">
+            <table class="table table-striped" id="output">
                 <thead>
                     <tr>
                         <th>Numbers</th>
@@ -19,6 +19,8 @@
                     </tr>
                 </tbody>
 </table>
+    <a id="dlink" style="display:none;"></a>
 
+    <input type="button" onclick="tableToExcel('output', 'name', 'table_')" value="Сохранить таблицу">
 
 </div>
